@@ -1,49 +1,54 @@
-import { useState } from 'react'
-import React from 'react';
-
+import React, { useRef, useState } from 'react';
+import axios from 'axios';
 
 function App() {
-  const [file, setFile] = useState(null); // State to hold the uploaded file
 
-  // Function to handle file selection
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
+  const textInputRef = useRef(null);
+  const [response, setResponse] = useState('howdy partner');
 
-  // Function to handle file drop
-  const handleDrop = (event) => {
-    event.preventDefault();
-    setFile(event.dataTransfer.files[0]);
-  };
+  const handleButtonClick = async () => {
 
-  // Function to handle drag over
-  const handleDragOver = (event) => {
-    event.preventDefault();
+    const queryInput = textInputRef.current.value;
+
+    console.log('Query:', queryInput);
+
+    axios.get(`https://recruiters-best-friend-backend.vercel.app/query/?prompt=${queryInput}`)
+      .then(response => {
+        // Handle the response
+        console.log(response.data);
+        setResponse(response.data.result);
+      })
+      .catch(error => {
+        // Handle errors
+        console.error('Error fetching data:', error);
+      });
+
   };
 
   return (
 
-    <div class="flex flex-col items-center justify-center w-full">
+    <div className="flex flex-col items-center justify-center w-full">
 
-      <input type="file" id="file-input" name="file-input" class="py-5" />
+      <input type="file" id="file-input" name="file-input" className="py-5" />
 
       <textarea
-        class="flex w-1/3 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[150px] py-2"
+        className="flex w-1/2 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[150px] py-2"
         id="input"
-        placeholder="Enter your text here."
+        value={response}
       ></textarea>
 
-      <div class="flex flex-row items-center py-5">
+      <div className="flex flex-row items-center py-5 w-1/2">
         <input
           type="search"
           id="text-input"
           name="text-input"
-          class="block w-full p-3 text-sm text-gray-900 border border-gray-300 rounded-lg dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="Ask question..."
-          required
+          className="block w-full p-3 text-sm border text-black border-gray-300 rounded-lg dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Enter your question here"
+          ref={textInputRef}
         />
-
-        <button class="bg-blue-500 text-white px-4 py-2 rounded-md ml-2">
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded-md ml-2"
+          onClick={handleButtonClick}>
           Send
         </button>
       </div>
