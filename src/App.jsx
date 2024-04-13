@@ -4,23 +4,27 @@ import axios from 'axios';
 function App() {
 
   const textInputRef = useRef(null);
-  const [response, setResponse] = useState('howdy partner');
+  const [response, setResponse] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleButtonClick = async () => {
 
     const queryInput = textInputRef.current.value;
-
     console.log('Query:', queryInput);
+
+    setLoading(true);
 
     axios.get(`https://recruiters-best-friend-backend.vercel.app/query/?prompt=${queryInput}`)
       .then(response => {
         // Handle the response
         console.log(response.data);
         setResponse(response.data.result);
+        setLoading(false);
       })
       .catch(error => {
         // Handle errors
         console.error('Error fetching data:', error);
+        setLoading(false);
       });
 
   };
@@ -48,8 +52,9 @@ function App() {
         />
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded-md ml-2"
-          onClick={handleButtonClick}>
-          Send
+          onClick={handleButtonClick}
+          disabled={loading}>
+          {loading ? 'Sending...' : 'Send'}
         </button>
       </div>
 
