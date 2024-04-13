@@ -1,21 +1,55 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React from 'react';
 
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [file, setFile] = useState(null); // State to hold the uploaded file
+
+  // Function to handle file selection
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  // Function to handle file drop
+  const handleDrop = (event) => {
+    event.preventDefault();
+    setFile(event.dataTransfer.files[0]);
+  };
+
+  // Function to handle drag over
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
 
   return (
-    <>
-      <div class="grid h-screen max-w-screen-lg items-center px-4 mx-auto gap-4">
 
-        <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your message</label>
-        <textarea id="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
+    <div class="flex flex-col items-center justify-center w-full">
 
+      <input type="file" id="file-input" name="file-input" class="py-5" />
+
+      <textarea
+        class="flex w-1/3 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[150px] py-2"
+        id="input"
+        placeholder="Enter your text here."
+      ></textarea>
+
+      <div class="flex flex-row items-center py-5">
+        <input
+          type="search"
+          id="text-input"
+          name="text-input"
+          class="block w-full p-3 text-sm text-gray-900 border border-gray-300 rounded-lg dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Ask question..."
+          required
+        />
+
+        <button class="bg-blue-500 text-white px-4 py-2 rounded-md ml-2">
+          Send
+        </button>
       </div>
-    </>
-  )
+
+    </div>
+  );
 }
 
 export default App
